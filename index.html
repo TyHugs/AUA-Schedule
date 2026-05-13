@@ -342,6 +342,35 @@
   .badge.umwide { background: #F3E8FF; color: #6B21A8; }
   .badge.flag { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
 
+  /* Session type pills */
+  .type-pill {
+    display: inline-block;
+    font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    margin-right: 6px; vertical-align: 2px;
+  }
+  .type-Plenary { background: #DBEAFE; color: #1E3A8A; }
+  .type-Course { background: #EDE9FE; color: #5B21B6; }
+  .type-Podium { background: #D1FAE5; color: #047857; }
+  .type-Poster { background: #CFFAFE; color: #155E75; }
+  .type-Video { background: #FFE4E6; color: #9F1239; }
+  .type-Hands-on { background: #FEF3C7; color: #92400E; }
+  .type-Product-Theater { background: #F3F4F6; color: #374151; }
+  .type-Specialty-Society { background: #FEF9C3; color: #854D0E; }
+  .type-Learning-Lab { background: #E0E7FF; color: #3730A3; }
+
+  /* Day chips for type filter look identical style-wise but in their own row */
+  .chip.type {
+    background: #fff;
+    border-color: #cbd5e1;
+    color: var(--ink-2);
+  }
+  .chip.type.active {
+    background: var(--um-blue-2);
+    color: #fff;
+    border-color: var(--um-blue-2);
+  }
+
   /* Session list inside speaker card */
   .sessions {
     margin-top: 10px;
@@ -608,7 +637,6 @@
       <div class="stat accent"><span class="n" id="stat-speakers">45</span><span class="l">Speakers</span></div>
       <div class="stat"><span class="n" id="stat-sessions">79</span><span class="l">Sessions</span></div>
       <div class="stat"><span class="n" id="stat-days">5</span><span class="l">Days</span></div>
-      <div class="stat"><span class="n" id="stat-rooms">25</span><span class="l">Rooms</span></div>
     </div>
   </div>
 </header>
@@ -642,6 +670,7 @@
 
     <div class="filters-section">
       <div class="filters" id="day-filters"></div>
+      <div class="filters" id="type-filters"></div>
       <div class="filters" id="cat-filters"></div>
     </div>
   </div>
@@ -652,7 +681,7 @@
     <span id="resultCount">Showing all UM speakers</span>
     <button class="ical-btn" id="icalBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      iCal
+      <span id="icalLabel">Download .ics</span>
     </button>
   </div>
 
@@ -751,11 +780,41 @@
     return { dow, dateKey: `${yr}-${String(monIdx+1).padStart(2,'0')}-${String(dy).padStart(2,'0')}`, dayLabel: `${dow.substring(0,3)} ${mon.substring(0,3)} ${dy}`, start, end, startStr: `${sh}:${sm} ${sap}`, endStr: `${eh}:${em} ${eap}` };
   }
 
-  // Annotate all speakers with parsed sessions
+  // Classify each session by AUA presentation type
+  function getSessionType(title, room) {
+    const t = (title || '').toLowerCase();
+    const r = (room || '').toLowerCase();
+    // 1) Title-prefix codes
+    if (/\b\d{2,3}ic\b/i.test(title)) return 'Course';
+    if (/\bpd\d/i.test(title)) return 'Podium';
+    if (/^v\d|\bv\d{2}\b/i.test(title)) return 'Video';
+    if (/^ip\d|\bip\d{2,}/i.test(title)) return 'Poster';
+    if (/^ucf-?\d/i.test(title)) return 'Poster';
+    if (/^pd\d/i.test(title)) return 'Podium';
+    // 2) Room-based
+    if (r.includes('hands-on training pavilion')) return 'Hands-on';
+    if (r.includes('s&t hall') || /\bbooth\b/i.test(r)) return 'Product Theater';
+    if (r.startsWith('marriott marquis')) return 'Specialty Society';
+    if (/\bsalon [bch]\b/i.test(r)) return 'Specialty Society';
+    if (r.includes('learning lab')) return 'Learning Lab';
+    // 3) Title keywords
+    if (/urologic care for the app|app: peer insights|\bsuna\b|\bssmr\b|\bnau\b/i.test(title)) return 'Specialty Society';
+    if (t.includes('society updates')) return 'Specialty Society';
+    if (/\bwelcome\b|\bwrap up\b|introduction/i.test(title)) return 'Specialty Society';
+    if (/\blecture\b/i.test(title)) return 'Plenary';
+    if (/crossfire/i.test(title)) return 'Plenary';
+    if (/focus on:/i.test(title)) return 'Plenary';
+    if (/key takeaways/i.test(title)) return 'Plenary';
+    if (/poster viewing/i.test(title)) return 'Poster';
+    return 'Plenary';
+  }
+
+  // Annotate all speakers with parsed sessions + types
   SPEAKERS.forEach(s => {
     s.sessions.forEach(sn => {
       const parsed = parseSession(sn.d);
       if (parsed) Object.assign(sn, parsed);
+      sn.type = getSessionType(sn.t, sn.r);
     });
   });
 
@@ -792,10 +851,8 @@
   DAYS.sort((a,b) => a.key.localeCompare(b.key));
 
   // Compute stats
-  const uniqueRooms = new Set(UNIQUE_SESSIONS.map(s => s.r)).size;
   document.getElementById('stat-sessions').textContent = UNIQUE_SESSIONS.length;
   document.getElementById('stat-days').textContent = DAYS.length;
-  document.getElementById('stat-rooms').textContent = uniqueRooms;
   document.getElementById('updateDate').textContent = 'Updated ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
   // ===========================================================
@@ -810,6 +867,7 @@
   let searchTerm = '';
   let catFilter = 'all';
   let dayFilter = 'all';
+  let typeFilter = 'all';
 
   // ===========================================================
   // HELPERS
@@ -831,6 +889,26 @@
   }
   function swapcardPerson(id) { return `https://app.swapcard.com/event/2026-annual-meeting-washington-dc/person/${id}`; }
   function swapcardSearch(name) { return `https://app.swapcard.com/event/2026-annual-meeting-washington-dc/people/RXZlbnRWaWV3XzEwNzg0NTE=?search=${encodeURIComponent(name.replace(/\(.*?\)/g,'').trim())}`; }
+
+  function pad2(n) { return String(n).padStart(2,'0'); }
+  function gcalLocalStr(d) {
+    return d.getFullYear() + pad2(d.getMonth()+1) + pad2(d.getDate()) + 'T' + pad2(d.getHours()) + pad2(d.getMinutes()) + '00';
+  }
+  function googleCalendarUrl(sn, speakerNames) {
+    if (!sn.start || !sn.end) return '#';
+    const title = '[UM] ' + sn.t;
+    const dates = gcalLocalStr(sn.start) + '/' + gcalLocalStr(sn.end);
+    const details = (speakerNames ? 'UM Speaker(s): ' + speakerNames + '\n\n' : '') + 'AUA 2026 — University of Michigan';
+    const loc = (sn.r || '') + ' · Walter E. Washington Convention Center';
+    const u = new URL('https://calendar.google.com/calendar/render');
+    u.searchParams.set('action','TEMPLATE');
+    u.searchParams.set('text', title);
+    u.searchParams.set('dates', dates);
+    u.searchParams.set('details', details);
+    u.searchParams.set('location', loc);
+    u.searchParams.set('ctz', 'America/New_York');
+    return u.toString();
+  }
 
   function sessionStatus(sn) {
     const now = new Date();
@@ -859,6 +937,11 @@
     if (catFilter === 'all') return true;
     if (catFilter === 'starred') return favs.has(s.name);
     return s.cat === catFilter;
+  }
+
+  function matchesType(sn) {
+    if (typeFilter === 'all') return true;
+    return sn.type === typeFilter;
   }
 
   // ===========================================================
@@ -905,17 +988,40 @@
     });
   }
 
+  // Build dynamic type list from actual data (only show types that exist)
+  const TYPE_ORDER = ['Plenary', 'Course', 'Podium', 'Poster', 'Video', 'Hands-on', 'Product Theater', 'Specialty Society', 'Learning Lab'];
+  const TYPE_COUNTS = {};
+  UNIQUE_SESSIONS.forEach(sn => { TYPE_COUNTS[sn.type] = (TYPE_COUNTS[sn.type] || 0) + 1; });
+  const PRESENT_TYPES = TYPE_ORDER.filter(t => TYPE_COUNTS[t]);
+
+  function renderTypeFilters() {
+    const wrap = document.getElementById('type-filters');
+    wrap.innerHTML = '';
+    const allBtn = document.createElement('button');
+    allBtn.className = 'chip type' + (typeFilter === 'all' ? ' active' : '');
+    allBtn.innerHTML = `Type: All <span class="count">${UNIQUE_SESSIONS.length}</span>`;
+    allBtn.addEventListener('click', () => { typeFilter = 'all'; renderTypeFilters(); render(); });
+    wrap.appendChild(allBtn);
+    PRESENT_TYPES.forEach(t => {
+      const btn = document.createElement('button');
+      btn.className = 'chip type' + (typeFilter === t ? ' active' : '');
+      btn.innerHTML = `${t} <span class="count">${TYPE_COUNTS[t]}</span>`;
+      btn.addEventListener('click', () => { typeFilter = t; renderTypeFilters(); render(); });
+      wrap.appendChild(btn);
+    });
+  }
+
   // ===========================================================
   // RENDER: VIEWS
   // ===========================================================
   function renderSpeakerCard(s) {
-    const filteredSessions = s.sessions.filter(sn => matchesDay(sn) && matchesSearch(s, sn));
+    const filteredSessions = s.sessions.filter(sn => matchesDay(sn) && matchesType(sn) && matchesSearch(s, sn));
     if (catFilter !== 'all' && !matchesCat(s)) return null;
-    // For "All days" + no search: show all sessions
-    if (!searchTerm && dayFilter === 'all' && filteredSessions.length === 0 && s.sessions.length === 0) return null;
-    if ((searchTerm || dayFilter !== 'all') && filteredSessions.length === 0 && !matchesSearch(s, null)) return null;
-    const sessionsToShow = (searchTerm || dayFilter !== 'all') ? filteredSessions : s.sessions;
-    if (sessionsToShow.length === 0 && (searchTerm || dayFilter !== 'all') && !matchesSearch(s, null)) return null;
+    const anyFilter = !!searchTerm || dayFilter !== 'all' || typeFilter !== 'all';
+    if (!anyFilter && filteredSessions.length === 0 && s.sessions.length === 0) return null;
+    if (anyFilter && filteredSessions.length === 0 && !matchesSearch(s, null)) return null;
+    const sessionsToShow = anyFilter ? filteredSessions : s.sessions;
+    if (sessionsToShow.length === 0 && anyFilter && !matchesSearch(s, null)) return null;
 
     const card = document.createElement('article');
     card.className = 'card' + (s.flag ? ' flagged' : '');
@@ -953,15 +1059,21 @@
         sessBtn.target = '_blank'; sessBtn.rel = 'noopener';
         const dayPart = sn.dayLabel || '';
         const timePart = sn.startStr && sn.endStr ? `${sn.startStr} – ${sn.endStr}` : sn.d;
+        const typePill = sn.type ? `<span class="type-pill type-${sn.type.replace(/\s/g, '-')}">${sn.type}</span>` : '';
         sessBtn.innerHTML = `<span class="session-day">${dayPart}</span><span class="session-time">${timePart}</span>` +
-          `<div class="session-title">${sn.t}</div>` +
+          `<div class="session-title">${typePill}${sn.t}</div>` +
           `<div class="session-room">${sn.r}</div>` +
           `<div class="session-actions"><button class="session-btn" data-act="ical">📅 Add to calendar</button><button class="session-btn" data-act="share">↗ Share</button></div>`;
         sessBtn.querySelectorAll('.session-btn').forEach(b => {
           b.addEventListener('click', (e) => {
             e.preventDefault(); e.stopPropagation();
-            if (b.dataset.act === 'ical') downloadIcal([sn], s.name);
-            else shareSession(sn, s);
+            if (b.dataset.act === 'ical') {
+              // Use Google Calendar deep link — works one-tap on iPhone/Android
+              const url = googleCalendarUrl(sn, s.name);
+              window.open(url, '_blank', 'noopener');
+            } else {
+              shareSession(sn, s);
+            }
           });
         });
         sw.appendChild(sessBtn);
@@ -992,6 +1104,7 @@
     let total = 0;
     filteredDays.forEach(d => {
       const daySessions = d.sessions.filter(sn => {
+        if (typeFilter !== 'all' && sn.type !== typeFilter) return false;
         if (catFilter !== 'all' && catFilter !== 'starred' && !sn.speakers.some(s => s.cat === catFilter)) return false;
         if (catFilter === 'starred' && !sn.speakers.some(s => favs.has(s.name))) return false;
         if (searchTerm) {
@@ -1013,9 +1126,10 @@
         card.href = sn.speakers.length === 1 ? swapcardPerson(sn.speakers[0].id) : swapcardSearch(sn.speakers[0].name);
         card.target = '_blank'; card.rel = 'noopener';
         const tag = status === 'live' ? '<span class="ts-tag live">LIVE</span>' : status === 'upcoming' ? '<span class="ts-tag upcoming">SOON</span>' : '';
+        const typePill = sn.type ? `<span class="type-pill type-${sn.type.replace(/\s/g, '-')}">${sn.type}</span>` : '';
         const speakerHtml = sn.speakers.map(s => `<strong>${s.name}</strong>`).join(' · ');
         card.innerHTML = `<div class="ts-top"><span class="ts-time">${sn.startStr || ''} – ${sn.endStr || ''}</span>${tag}</div>` +
-          `<div class="ts-title">${sn.t}</div>` +
+          `<div class="ts-title">${typePill}${sn.t}</div>` +
           `<div class="ts-speakers">${speakerHtml}</div>` +
           `<div class="ts-room">${sn.r}</div>`;
         tl.appendChild(card);
@@ -1031,6 +1145,7 @@
     const live = [], upcoming = [], later = [];
     UNIQUE_SESSIONS.forEach(sn => {
       if (!sn.start) return;
+      if (typeFilter !== 'all' && sn.type !== typeFilter) return;
       if (searchTerm) {
         const t = searchTerm.toLowerCase();
         if (!sn.t.toLowerCase().includes(t) && !sn.r.toLowerCase().includes(t) &&
@@ -1068,8 +1183,9 @@
         card.href = sn.speakers.length === 1 ? swapcardPerson(sn.speakers[0].id) : swapcardSearch(sn.speakers[0].name);
         card.target = '_blank'; card.rel = 'noopener';
         const tag = cls === 'live' ? '<span class="ts-tag live">LIVE NOW</span>' : cls === 'upcoming' ? '<span class="ts-tag upcoming">SOON</span>' : '';
+        const typePill = sn.type ? `<span class="type-pill type-${sn.type.replace(/\s/g, '-')}">${sn.type}</span>` : '';
         card.innerHTML = `<div class="ts-top"><span class="ts-time">${sn.dayLabel} · ${sn.startStr} – ${sn.endStr}</span>${tag}</div>` +
-          `<div class="ts-title">${sn.t}</div>` +
+          `<div class="ts-title">${typePill}${sn.t}</div>` +
           `<div class="ts-speakers">${sn.speakers.map(s => `<strong>${s.name}</strong>`).join(' · ')}</div>` +
           `<div class="ts-room">${sn.r}</div>`;
         tl.appendChild(card);
@@ -1121,6 +1237,7 @@
                     `${result.count} saved`;
       document.getElementById('resultCount').textContent = label;
     }
+    refreshIcalLabel();
   }
 
   // ===========================================================
@@ -1161,21 +1278,59 @@
     setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
     toast('📅 Calendar file downloaded');
   }
-  document.getElementById('icalBtn').addEventListener('click', () => {
-    let toExport;
-    if (view === 'favorites') {
-      toExport = UNIQUE_SESSIONS.filter(sn => sn.speakers.some(s => favs.has(s.name)));
-      if (toExport.length === 0) { toast('No favorites to export'); return; }
-    } else if (catFilter === 'starred') {
-      toExport = UNIQUE_SESSIONS.filter(sn => sn.speakers.some(s => favs.has(s.name)));
-    } else {
-      toExport = UNIQUE_SESSIONS.filter(sn => {
-        if (dayFilter !== 'all' && sn.dateKey !== dayFilter) return false;
-        if (catFilter !== 'all' && !sn.speakers.some(s => s.cat === catFilter)) return false;
-        return true;
-      });
+  // Compute what would be exported right now based on view + filters
+  function currentExportSet() {
+    if (view === 'favorites' || catFilter === 'starred') {
+      const favSet = UNIQUE_SESSIONS.filter(sn => sn.speakers.some(s => favs.has(s.name)));
+      return { sessions: favSet, source: 'favorites' };
     }
-    downloadIcal(toExport, 'UM_AUA2026' + (dayFilter !== 'all' ? '_' + dayFilter : ''));
+    const anyFilter = dayFilter !== 'all' || typeFilter !== 'all' || catFilter !== 'all' || !!searchTerm;
+    const filtered = UNIQUE_SESSIONS.filter(sn => {
+      if (dayFilter !== 'all' && sn.dateKey !== dayFilter) return false;
+      if (typeFilter !== 'all' && sn.type !== typeFilter) return false;
+      if (catFilter !== 'all' && !sn.speakers.some(s => s.cat === catFilter)) return false;
+      if (searchTerm) {
+        const t = searchTerm.toLowerCase();
+        if (!sn.t.toLowerCase().includes(t) && !sn.r.toLowerCase().includes(t) &&
+            !sn.speakers.some(s => s.name.toLowerCase().includes(t))) return false;
+      }
+      return true;
+    });
+    return { sessions: filtered, source: anyFilter ? 'filtered' : 'all' };
+  }
+
+  function refreshIcalLabel() {
+    const { sessions, source } = currentExportSet();
+    const labelEl = document.getElementById('icalLabel');
+    const btn = document.getElementById('icalBtn');
+    if (source === 'favorites') {
+      labelEl.textContent = sessions.length ? `Download ★ ${sessions.length}` : 'Star some first';
+      btn.style.opacity = sessions.length ? '1' : '0.55';
+    } else if (source === 'filtered') {
+      labelEl.textContent = `Download ${sessions.length} .ics`;
+      btn.style.opacity = sessions.length ? '1' : '0.55';
+    } else {
+      labelEl.textContent = 'Filter or ★ first';
+      btn.style.opacity = '0.6';
+    }
+  }
+
+  document.getElementById('icalBtn').addEventListener('click', () => {
+    const { sessions, source } = currentExportSet();
+    if (source === 'all') {
+      toast('Filter by day/type/★ first, then download');
+      return;
+    }
+    if (sessions.length === 0) {
+      toast(source === 'favorites' ? 'No favorites yet — tap ★ on a speaker' : 'Nothing matches your filter');
+      return;
+    }
+    const tagBits = [];
+    if (dayFilter !== 'all') tagBits.push(dayFilter);
+    if (typeFilter !== 'all') tagBits.push(typeFilter.replace(/\s/g,'_'));
+    if (source === 'favorites') tagBits.push('favorites');
+    const fname = 'UM_AUA2026' + (tagBits.length ? '_' + tagBits.join('-') : '');
+    downloadIcal(sessions, fname);
   });
 
   function shareSession(sn, s) {
@@ -1207,8 +1362,8 @@
   });
   clearBtn.addEventListener('click', () => { searchInput.value=''; searchTerm=''; clearBtn.classList.remove('visible'); render(); searchInput.focus(); });
   document.getElementById('resetAll').addEventListener('click', () => {
-    searchInput.value=''; searchTerm=''; catFilter='all'; dayFilter='all'; clearBtn.classList.remove('visible');
-    renderCatFilters(); renderDayFilters(); render();
+    searchInput.value=''; searchTerm=''; catFilter='all'; dayFilter='all'; typeFilter='all'; clearBtn.classList.remove('visible');
+    renderCatFilters(); renderDayFilters(); renderTypeFilters(); render();
   });
 
   let toastTimer;
@@ -1224,6 +1379,7 @@
   // ===========================================================
   renderCatFilters();
   renderDayFilters();
+  renderTypeFilters();
   render();
 
   // Auto-refresh now-view every 60s
