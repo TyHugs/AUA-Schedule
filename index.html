@@ -8,6 +8,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="UM @ AUA2026" />
 <meta name="description" content="University of Michigan Department of Urology speaker guide for AUA 2026 — every session, every speaker, every room." />
+<meta property="og:title" content="UM @ AUA 2026 — Speaker Guide" />
+<meta property="og:description" content="Find every Michigan presentation at the AUA Annual Meeting. Search by speaker, day, room, or session type." />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="UM @ AUA 2026 — Speaker Guide" />
+<meta name="twitter:description" content="Find every Michigan presentation at the AUA Annual Meeting." />
 <title>UM @ AUA 2026 — Speaker Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,6 +51,8 @@
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; }
+  /* Screen-reader-only utility for hidden labels */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
   body {
     font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     color: var(--ink);
@@ -65,7 +73,7 @@
       radial-gradient(900px 500px at -10% 110%, rgba(196, 148, 61, 0.18), transparent 55%),
       linear-gradient(155deg, var(--um-blue) 0%, var(--um-blue-2) 55%, var(--um-blue-3) 100%);
     color: #fff;
-    padding: 24px 20px 40px;
+    padding: max(24px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 40px max(20px, env(safe-area-inset-left));
     border-bottom-left-radius: 28px;
     border-bottom-right-radius: 28px;
     position: relative;
@@ -141,26 +149,26 @@
   }
   .controls-inner {
     background: var(--card);
-    border-radius: 18px;
+    border-radius: 16px;
     box-shadow: var(--sh-lg);
-    padding: 12px;
+    padding: 10px;
     border: 1px solid var(--line);
   }
 
-  /* View tabs */
+  /* View tabs — compact for mobile so the sticky panel doesn't swallow half the viewport */
   .view-tabs {
     display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
+    gap: 3px;
     background: var(--line-2);
-    padding: 4px;
-    border-radius: 12px;
-    margin-bottom: 10px;
+    padding: 3px;
+    border-radius: 10px;
+    margin-bottom: 8px;
   }
   .view-tab {
     appearance: none; border: none; background: transparent;
     color: var(--ink-3);
-    padding: 8px 4px;
-    border-radius: 8px;
+    padding: 7px 4px;
+    border-radius: 7px;
     font-weight: 700; font-size: 12px;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center; gap: 4px;
@@ -175,18 +183,18 @@
 
   .search-wrap {
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   .search-wrap svg {
-    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-    width: 16px; height: 16px; color: var(--ink-3);
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    width: 15px; height: 15px; color: var(--ink-3);
   }
   .search-wrap input {
     width: 100%;
-    height: 42px;
+    height: 38px;
     border: 1.5px solid var(--line);
-    border-radius: 10px;
-    padding: 0 36px 0 38px;
+    border-radius: 9px;
+    padding: 0 34px 0 34px;
     font-size: 15px;
     font-family: inherit;
     background: var(--line-2);
@@ -210,14 +218,16 @@
   .clear-btn.visible { display: inline-flex; }
 
   .filters {
-    display: flex; gap: 6px; overflow-x: auto;
+    display: flex; gap: 5px; overflow-x: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+    /* Right-edge fade hints at horizontal scroll */
+    mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 16px), transparent 100%);
   }
   .filters::-webkit-scrollbar { display: none; }
   .chip {
     appearance: none; border: 1.5px solid var(--line); background: #fff; color: var(--ink-2);
-    padding: 6px 12px; border-radius: 999px;
+    padding: 5px 10px; border-radius: 999px;
     font-size: 12px; font-weight: 600;
     cursor: pointer; white-space: nowrap;
     display: inline-flex; align-items: center; gap: 4px;
@@ -247,9 +257,8 @@
   .chip.star::before { content: "★"; color: var(--um-maize); margin-right: 2px; }
   .chip.star.active::before { color: #fff; }
 
-  /* Two filter rows: category, day */
   .filters-section {
-    display: flex; flex-direction: column; gap: 8px;
+    display: flex; flex-direction: column; gap: 6px;
   }
   .filters-label {
     font-size: 10px; font-weight: 700; text-transform: uppercase;
@@ -271,7 +280,6 @@
     cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
   }
   .ical-btn svg { width: 13px; height: 13px; }
-  .ical-btn:hover { background: var(--um-blue-2); border-color: var(--um-blue-2); }
 
   /* ====== SPEAKER CARDS ====== */
   .grid {
@@ -287,8 +295,18 @@
     box-shadow: var(--sh-xs);
     transition: box-shadow 0.12s, border-color 0.12s;
   }
-  .card:hover { box-shadow: var(--sh-md); border-color: #d4dce5; }
-  .card.flagged { border-left: 3px solid var(--amber); }
+  @media (hover: hover) {
+    .card:hover { box-shadow: var(--sh-md); border-color: #d4dce5; }
+    .session:hover { background: #E7EEF6; }
+    .timeline-session:hover { box-shadow: var(--sh-sm); }
+    .session-btn:hover { background: #fff; border-color: var(--um-blue); color: var(--um-blue); }
+    .btn-primary:hover { background: var(--um-blue-2); }
+    .btn-ghost:hover { background: #e7edf3; }
+    .ical-btn:hover { background: var(--um-blue-2); border-color: var(--um-blue-2); }
+    .fav:hover { background: var(--line-2); }
+  }
+  /* Verify-ID flag — dotted (not solid) so it's visually distinct from LIVE/SOON amber markers */
+  .card.flagged { border-left: 3px dotted var(--gold); }
 
   .card-top {
     display: flex; align-items: flex-start; gap: 10px;
@@ -322,7 +340,6 @@
     transition: color 0.12s, background 0.12s, transform 0.1s;
     flex-shrink: 0;
   }
-  .fav:hover { background: var(--line-2); }
   .fav:active { transform: scale(0.92); }
   .fav.on { color: var(--um-maize); }
   .fav.on::before { content: "★"; }
@@ -354,9 +371,9 @@
   .type-Podium { background: #D1FAE5; color: #047857; }
   .type-Poster { background: #CFFAFE; color: #155E75; }
   .type-Video { background: #FFE4E6; color: #9F1239; }
-  .type-Hands-on { background: #FEF3C7; color: #92400E; }
-  .type-Product-Theater { background: #F3F4F6; color: #374151; }
-  .type-Specialty-Society { background: #FEF9C3; color: #854D0E; }
+  .type-Hands-on { background: #FFEDD5; color: #9A3412; }
+  .type-Product-Theater { background: #E5E7EB; color: #1F2937; }
+  .type-Specialty-Society { background: #FFE4D9; color: #7C2D12; }
   .type-Learning-Lab { background: #E0E7FF; color: #3730A3; }
 
   /* Day chips for type filter look identical style-wise but in their own row */
@@ -371,7 +388,47 @@
     border-color: var(--um-blue-2);
   }
 
-  /* Session list inside speaker card */
+  /* Collapsed-state card preview (default for speakers view) */
+  .card-preview {
+    margin-top: 8px;
+    padding: 10px;
+    background: var(--line-2);
+    border-radius: 10px;
+    border-left: 3px solid var(--um-blue);
+    transition: background 0.12s;
+  }
+  .card-preview:active { transform: scale(0.99); }
+  .preview-meta {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .preview-count {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--um-blue);
+  }
+  .preview-chev {
+    font-size: 10px; color: var(--ink-3); font-weight: 600;
+    margin-left: auto;
+  }
+  .next-badge {
+    font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .next-badge.live { background: var(--green); color: #fff; }
+  .next-badge.upcoming { background: var(--amber); color: #fff; }
+  .preview-next {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    font-size: 12px;
+  }
+  .preview-next-time {
+    font-weight: 700; color: var(--um-blue);
+  }
+  .preview-next-room {
+    color: var(--ink-3);
+  }
+  .preview-next-room::before { content: "📍"; margin-right: 3px; font-size: 10px; }
+
+  /* Session list inside speaker card (expanded state) */
   .sessions {
     margin-top: 10px;
     border-top: 1px solid var(--line);
@@ -383,6 +440,14 @@
     margin-bottom: 8px;
     display: flex; align-items: center; justify-content: space-between;
   }
+  .sessions-collapse {
+    appearance: none; border: none; background: transparent;
+    color: var(--ink-3); cursor: pointer;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 8px; border-radius: 6px;
+  }
+  .sessions-collapse:active { background: var(--line-2); }
   .session {
     display: block;
     background: var(--line-2);
@@ -391,9 +456,13 @@
     margin-bottom: 6px;
     border-left: 3px solid var(--um-blue);
     transition: background 0.12s, transform 0.1s;
+  }
+  .session-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
     cursor: pointer;
   }
-  .session:hover { background: #E7EEF6; }
   .session:active { transform: scale(0.99); }
   .session.live { border-left-color: var(--green); background: #ECFDF5; }
   .session.now-tag { position: relative; }
@@ -447,7 +516,6 @@
     cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center; gap: 4px;
   }
-  .session-btn:hover { background: #fff; border-color: var(--um-blue); color: var(--um-blue); }
   .session-btn svg { width: 11px; height: 11px; }
 
   .card-actions {
@@ -462,19 +530,18 @@
     text-decoration: none;
   }
   .btn-primary { background: var(--um-blue); color: #fff; flex: 1; }
-  .btn-primary:hover { background: var(--um-blue-2); }
   .btn-ghost { background: var(--line-2); color: var(--ink-2); }
-  .btn-ghost:hover { background: #e7edf3; }
   .btn svg { width: 12px; height: 12px; }
 
   /* ====== TIMELINE VIEW ====== */
   .day-section { margin-bottom: 24px; }
   .day-header {
-    position: sticky; top: 0; z-index: 5;
     background: var(--bg);
     padding: 8px 0;
     display: flex; align-items: center; gap: 10px;
     margin-bottom: 8px;
+    border-bottom: 2px solid var(--um-maize);
+    padding-bottom: 10px;
   }
   .day-header-text {
     font-family: "Fraunces", serif;
@@ -497,7 +564,6 @@
     cursor: pointer;
     transition: box-shadow 0.12s, transform 0.1s;
   }
-  .timeline-session:hover { box-shadow: var(--sh-sm); }
   .timeline-session:active { transform: scale(0.99); }
   .timeline-session.live { border-left-color: var(--green); background: #F0FDF4; }
   .timeline-session.upcoming { border-left-color: var(--amber); background: #FFFBEB; }
@@ -534,6 +600,43 @@
     display: inline-flex; align-items: center; gap: 4px;
   }
   .ts-room::before { content: "📍"; }
+
+  /* My Plan view */
+  .plan-summary {
+    display: flex; gap: 10px; margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .plan-summary-stat {
+    flex: 1 1 100px;
+    background: linear-gradient(135deg, var(--um-blue) 0%, var(--um-blue-2) 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    box-shadow: var(--sh-sm);
+  }
+  .plan-summary-stat.plan-summary-warn {
+    background: linear-gradient(135deg, #B45309 0%, #C2410C 100%);
+  }
+  .plan-summary-stat .plan-n {
+    font-family: "Fraunces", serif;
+    font-size: 24px; font-weight: 700; line-height: 1;
+    display: block; margin-bottom: 4px;
+  }
+  .plan-summary-stat .plan-l {
+    font-size: 11px; opacity: 0.9; letter-spacing: 0.04em;
+    text-transform: uppercase; font-weight: 600;
+  }
+  .timeline-session.conflicted {
+    border-left-color: #DC2626;
+    background: linear-gradient(to right, #FEF2F2 0%, #FFFFFF 50%);
+  }
+  .conflict-banner {
+    margin-top: 8px; padding: 6px 10px;
+    background: #FEE2E2; color: #991B1B;
+    border-radius: 8px; border-left: 3px solid #DC2626;
+    font-size: 11px; font-weight: 600;
+    line-height: 1.4;
+  }
 
   /* ====== NOW/NEXT VIEW ====== */
   .now-hero {
@@ -629,7 +732,7 @@
           <small>AUA 2026 Guide</small>
         </span>
       </span>
-      <span class="hero-meta">May 15 – 18, 2026 · Washington, DC</span>
+      <span class="hero-meta">May 14 – 18, 2026 · Washington, DC</span>
     </div>
     <h1>Every <span class="accent">Michigan</span> session.<br/>Right when you need it.</h1>
     <p class="lede">The complete schedule of who's speaking, when, where, and what — for the U-M Department of Urology at the AUA Annual Meeting.</p>
@@ -657,15 +760,16 @@
         Now
       </button>
       <button class="view-tab" data-view="favorites">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        Saved
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        My Plan
       </button>
     </div>
 
-    <div class="search-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input id="search" type="search" placeholder="Search name, topic, room…" autocomplete="off" />
-      <button class="clear-btn" id="clear" aria-label="Clear">×</button>
+    <div class="search-wrap" role="search">
+      <label for="search" class="sr-only">Search by speaker name, session topic, or room</label>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="Search name, topic, room…" autocomplete="off" aria-label="Search by speaker, topic, or room" />
+      <button class="clear-btn" id="clear" aria-label="Clear search">×</button>
     </div>
 
     <div class="filters-section">
@@ -679,10 +783,13 @@
 <main class="content">
   <div class="result-meta">
     <span id="resultCount">Showing all UM speakers</span>
+    <div style="display: inline-flex; gap: 6px; align-items: center;">
+    <button class="ical-btn" id="expandAllBtn" type="button" style="background: transparent; color: var(--um-blue); border-color: var(--line); display: none;" aria-label="Expand or collapse all speaker cards"><span id="expandAllLabel">Expand all</span></button>
     <button class="ical-btn" id="icalBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       <span id="icalLabel">Download .ics</span>
     </button>
+    </div>
   </div>
 
   <div id="content"></div>
@@ -695,14 +802,14 @@
   </div>
 </main>
 
-<a class="float-pill" href="https://app.swapcard.com/event/2026-annual-meeting-washington-dc/people/RXZlbnRWaWV3XzEwNzg0NTE=?search=Michigan" target="_blank" rel="noopener">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M21 14v7H3V3h7"/></svg>
-  Swapcard
+<a class="float-pill" href="https://app.swapcard.com/event/2026-annual-meeting-washington-dc/people/RXZlbnRWaWV3XzEwNzg0NTE=?search=Michigan" target="_blank" rel="noopener" aria-label="Open the AUA 2026 Swapcard app, filtered to Michigan speakers">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M21 14v7H3V3h7"/></svg>
+  Open in AUA App
 </a>
 
 <footer class="footer">
   <div class="divider"></div>
-  <div>Data from the <a href="https://app.swapcard.com/event/2026-annual-meeting-washington-dc/people/RXZlbnRWaWV3XzEwNzg0NTE=" target="_blank">AUA 2026 Swapcard directory</a>, cross-checked against the UM Urology department roster. Session times reflect Swapcard at time of capture — tap any session to verify live.</div>
+  <div>Data from the <a href="https://app.swapcard.com/event/2026-annual-meeting-washington-dc/people/RXZlbnRWaWV3XzEwNzg0NTE=" target="_blank" rel="noopener">AUA 2026 Swapcard directory</a>, cross-checked against the UM Urology department roster. Session times reflect Swapcard at time of capture — tap any session to verify live.</div>
   <div style="margin-top:8px;">University of Michigan Department of Urology · <span id="updateDate"></span></div>
 </footer>
 
@@ -753,11 +860,11 @@
     {"name":"Leilane Glienke","id":"RXZlbnRQZW9wbGVfNDQ2MDkzMDI=","title":"Research Fellow","aff":"University of Michigan","cat":"Researcher","division":"Research","sessions":[{"t":"IP10-10: Fiber-to-Stone Distance and Fragment Size with Holmium Laser Lithotripsy","d":"Friday, May 15, 2026 9:30 AM to 11:30 AM","r":"146C"},{"t":"IP10-18: Intrarenal Pressure Response to Suction During Ureteroscopy: In Vivo Porcine Studies","d":"Friday, May 15, 2026 9:30 AM to 11:30 AM","r":"146C"}]},
     {"name":"Ashley Harrie","id":"RXZlbnRQZW9wbGVfNDQ2NTQ5MDk=","title":"Medical Student","aff":"U-M Medical School","cat":"Medical Student","division":"Medical School","sessions":[{"t":"IP16-03: A prospective longitudinal study of urinary metabolites among women with and without overactive bladder","d":"Friday, May 15, 2026 1:00 PM to 3:00 PM","r":"146C"}]},
     {"name":"Kristin Chrouser","id":"RXZlbnRQZW9wbGVfNDQ4MzAyODY=","title":"MD","aff":"VA Ann Arbor Healthcare System","cat":"Faculty","division":"VA Ann Arbor","flag":true,"sessions":[{"t":"Ergonomics in Urologic Surgery and Microsurgery","d":"Sunday, May 17, 2026 4:00 PM to 4:15 PM","r":"Marriott Marquis: Marquis Ballroom Salon 5"}]},
-    {"name":"Jeffrey Montgomery","id":"RXZlbnRQZW9wbGVfNDUwNTE2OTM=","title":"MD","aff":"University of Michigan (assumed)","cat":"Faculty","division":"Urology","flag":true,"sessions":[{"t":"Management of Penile Cancer","d":"Saturday, May 16, 2026 10:00 AM to 11:00 AM","r":"Marriott Marquis: Liberty Ballroom Salon I"}]},
-    {"name":"Mae Crumbley","id":"RXZlbnRQZW9wbGVfNDQ2MTAyNDc=","title":"Resident (HO2)","aff":"University of Michigan (assumed)","cat":"Resident","division":"Urology","flag":true,"sessions":[{"t":"V06-11: Empowering patients to reduce unplanned healthcare encounters after BPH surgeries","d":"Saturday, May 16, 2026 11:10 AM to 11:20 AM","r":"207B"}]},
-    {"name":"Amelia Khoei","id":"RXZlbnRQZW9wbGVfNDQ2MDc0Mzg=","title":"PGY2","aff":"University of Michigan (assumed)","cat":"Resident","division":"Urology","flag":true,"sessions":[{"t":"IP57-18: Urology Resident Satisfaction of a Peer Community Program to Foster Belonging and Mentorship","d":"Sunday, May 17, 2026 9:30 AM to 11:30 AM","r":"146B"}]},
-    {"name":"Victor Yu","id":"RXZlbnRQZW9wbGVfNDQ2MTA0Mjc=","title":"Resident","aff":"University of Michigan (assumed)","cat":"Resident","division":"Urology","flag":true,"sessions":[{"t":"PD11-06: Ileal conduit formation in patients with Crohn's disease undergoing pelvic exenteration","d":"Saturday, May 16, 2026 10:10 AM to 10:18 AM","r":"206"}]},
-    {"name":"Andria Li","id":"RXZlbnRQZW9wbGVfNDQ2MzM5ODA=","title":"Resident","aff":"Vanderbilt (likely former)","cat":"Resident","division":"Urology","flag":true,"sessions":[{"t":"IP16-21: Incidence of and Time to Minimally Invasive Therapy among Patients with Idiopathic Overactive Bladder","d":"Friday, May 15, 2026 1:00 PM to 3:00 PM","r":"146C"}]}
+    {"name":"Jeffrey Montgomery","id":"RXZlbnRQZW9wbGVfNDUwNTE2OTM=","title":"MD","aff":"University of Michigan","cat":"Faculty","division":"Urology","flag":true,"sessions":[{"t":"Management of Penile Cancer","d":"Saturday, May 16, 2026 10:00 AM to 11:00 AM","r":"Marriott Marquis: Liberty Ballroom Salon I"}]},
+    {"name":"Mae Crumbley","id":"RXZlbnRQZW9wbGVfNDQ2MTAyNDc=","title":"Resident (HO2)","aff":"University of Michigan","cat":"Resident","division":"Urology","flag":true,"sessions":[{"t":"V06-11: Empowering patients to reduce unplanned healthcare encounters after BPH surgeries","d":"Saturday, May 16, 2026 11:10 AM to 11:20 AM","r":"207B"}]},
+    {"name":"Amelia Khoei","id":"RXZlbnRQZW9wbGVfNDQ2MDc0Mzg=","title":"PGY2","aff":"University of Michigan","cat":"Resident","division":"Urology","flag":true,"sessions":[{"t":"IP57-18: Urology Resident Satisfaction of a Peer Community Program to Foster Belonging and Mentorship","d":"Sunday, May 17, 2026 9:30 AM to 11:30 AM","r":"146B"}]},
+    {"name":"Victor Yu","id":"RXZlbnRQZW9wbGVfNDQ2MTA0Mjc=","title":"Resident","aff":"University of Michigan","cat":"Resident","division":"Urology","flag":true,"sessions":[{"t":"PD11-06: Ileal conduit formation in patients with Crohn's disease undergoing pelvic exenteration","d":"Saturday, May 16, 2026 10:10 AM to 10:18 AM","r":"206"}]},
+    {"name":"Andria Li","id":"RXZlbnRQZW9wbGVfNDQ2MzM5ODA=","title":"Resident","aff":"University of Michigan","cat":"Resident","division":"Urology","flag":true,"sessions":[{"t":"IP16-21: Incidence of and Time to Minimally Invasive Therapy among Patients with Idiopathic Overactive Bladder","d":"Friday, May 15, 2026 1:00 PM to 3:00 PM","r":"146C"}]}
   ];
 
   // ===========================================================
@@ -767,6 +874,8 @@
 
   function parseSession(dateStr) {
     // "Friday, May 15, 2026 1:30 PM to 3:30 PM"
+    // CRITICAL: anchor session times to America/New_York (EDT = UTC-4 in May)
+    // so the Now-view "LIVE / SOON" detection is correct regardless of the viewer's timezone.
     const m = dateStr.match(/^(\w+),\s+(\w+)\s+(\d+),\s+(\d+)\s+(\d+):(\d+)\s+(AM|PM)\s+to\s+(\d+):(\d+)\s+(AM|PM)/);
     if (!m) return null;
     const [, dow, mon, day, year, sh, sm, sap, eh, em, eap] = m;
@@ -775,37 +884,41 @@
     const dy = parseInt(day);
     let startH = parseInt(sh); if (sap === 'PM' && startH !== 12) startH += 12; if (sap === 'AM' && startH === 12) startH = 0;
     let endH = parseInt(eh); if (eap === 'PM' && endH !== 12) endH += 12; if (eap === 'AM' && endH === 12) endH = 0;
-    const start = new Date(yr, monIdx, dy, startH, parseInt(sm));
-    const end = new Date(yr, monIdx, dy, endH, parseInt(em));
-    return { dow, dateKey: `${yr}-${String(monIdx+1).padStart(2,'0')}-${String(dy).padStart(2,'0')}`, dayLabel: `${dow.substring(0,3)} ${mon.substring(0,3)} ${dy}`, start, end, startStr: `${sh}:${sm} ${sap}`, endStr: `${eh}:${em} ${eap}` };
+    const pad = n => String(n).padStart(2, '0');
+    // ISO 8601 with explicit EDT offset
+    const start = new Date(`${yr}-${pad(monIdx+1)}-${pad(dy)}T${pad(startH)}:${pad(parseInt(sm))}:00-04:00`);
+    const end = new Date(`${yr}-${pad(monIdx+1)}-${pad(dy)}T${pad(endH)}:${pad(parseInt(em))}:00-04:00`);
+    return { dow, dateKey: `${yr}-${pad(monIdx+1)}-${pad(dy)}`, dayLabel: `${dow.substring(0,3)} ${mon.substring(0,3)} ${dy}`, start, end, startStr: `${sh}:${sm} ${sap}`, endStr: `${eh}:${em} ${eap}` };
   }
 
-  // Classify each session by AUA presentation type
+  // Classify each session by AUA presentation type.
+  // Priority: prefix-code → strong title keywords → physical-space room → soft title keywords → default.
   function getSessionType(title, room) {
     const t = (title || '').toLowerCase();
     const r = (room || '').toLowerCase();
-    // 1) Title-prefix codes
-    if (/\b\d{2,3}ic\b/i.test(title)) return 'Course';
-    if (/\bpd\d/i.test(title)) return 'Podium';
-    if (/^v\d|\bv\d{2}\b/i.test(title)) return 'Video';
-    if (/^ip\d|\bip\d{2,}/i.test(title)) return 'Poster';
-    if (/^ucf-?\d/i.test(title)) return 'Poster';
-    if (/^pd\d/i.test(title)) return 'Podium';
-    // 2) Room-based
+    // 1) AUA prefix-code conventions (deterministic)
+    if (/\b\d{2,3}ic\b/i.test(title)) return 'Course';     // 012IC, 052IC
+    if (/\bpd\d/i.test(title)) return 'Podium';            // PD04, PD11-06
+    if (/^v\d|\bv\d{2}\b/i.test(title)) return 'Video';    // V09, V15, V02-08
+    if (/^ip\d|\bip\d{2,}/i.test(title)) return 'Poster';  // IP08-17
+    if (/^ucf-?\d/i.test(title)) return 'Poster';          // UCF-19
+    if (/poster viewing/i.test(title)) return 'Poster';
+    // 2) Strong Plenary signals (featured AUA tracks — override room)
+    if (/\blecture\b/i.test(title)) return 'Plenary';      // named lectures (Coffey, etc.)
+    if (/crossfire/i.test(title)) return 'Plenary';        // Crossfire debates
+    if (/focus on:/i.test(title)) return 'Plenary';        // Focus On Session track
+    if (/key takeaways/i.test(title)) return 'Plenary';    // Key Takeaways recaps
+    // 3) Physical-space rooms (deterministic)
     if (r.includes('hands-on training pavilion')) return 'Hands-on';
     if (r.includes('s&t hall') || /\bbooth\b/i.test(r)) return 'Product Theater';
+    if (r.includes('learning lab')) return 'Learning Lab';
+    // 4) Specialty-society markers (room + title)
     if (r.startsWith('marriott marquis')) return 'Specialty Society';
     if (/\bsalon [bch]\b/i.test(r)) return 'Specialty Society';
-    if (r.includes('learning lab')) return 'Learning Lab';
-    // 3) Title keywords
     if (/urologic care for the app|app: peer insights|\bsuna\b|\bssmr\b|\bnau\b/i.test(title)) return 'Specialty Society';
     if (t.includes('society updates')) return 'Specialty Society';
     if (/\bwelcome\b|\bwrap up\b|introduction/i.test(title)) return 'Specialty Society';
-    if (/\blecture\b/i.test(title)) return 'Plenary';
-    if (/crossfire/i.test(title)) return 'Plenary';
-    if (/focus on:/i.test(title)) return 'Plenary';
-    if (/key takeaways/i.test(title)) return 'Plenary';
-    if (/poster viewing/i.test(title)) return 'Poster';
+    // 5) Default
     return 'Plenary';
   }
 
@@ -850,10 +963,13 @@
   });
   DAYS.sort((a,b) => a.key.localeCompare(b.key));
 
-  // Compute stats
+  // Compute stats (all dynamic — never hard-code)
+  document.getElementById('stat-speakers').textContent = SPEAKERS.length;
   document.getElementById('stat-sessions').textContent = UNIQUE_SESSIONS.length;
   document.getElementById('stat-days').textContent = DAYS.length;
-  document.getElementById('updateDate').textContent = 'Updated ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  // Date the underlying session data was captured from Swapcard
+  const DATA_CAPTURED = 'May 13, 2026';
+  document.getElementById('updateDate').textContent = 'Session data captured ' + DATA_CAPTURED + ' — verify any individual session on Swapcard before relying on it.';
 
   // ===========================================================
   // STATE
@@ -863,11 +979,52 @@
   try { favs = new Set(JSON.parse(localStorage.getItem(STORE_KEY) || '[]')); } catch (e) { favs = new Set(); }
   function saveFavs() { try { localStorage.setItem(STORE_KEY, JSON.stringify([...favs])); } catch(e){} }
 
+  // Per-card expand state (in-memory only — resets on page reload)
+  const expandedCards = new Set();
+
   let view = 'speakers';
   let searchTerm = '';
   let catFilter = 'all';
   let dayFilter = 'all';
   let typeFilter = 'all';
+
+  // ===========================================================
+  // URL STATE — persist view + filters + search to the URL so any
+  // filtered slice of the guide is shareable. Tyler can text a
+  // fellow a link that already filters to Saturday Courses.
+  // ===========================================================
+  const VALID_VIEWS = new Set(['speakers', 'timeline', 'now', 'favorites']);
+  const VALID_CATS = new Set(['all','Faculty','Fellow','Resident','Medical Student','APP / Nurse','Researcher','UM-Wide']);
+
+  function readUrlState() {
+    const params = new URL(location.href).searchParams;
+    if (params.has('view') && VALID_VIEWS.has(params.get('view'))) view = params.get('view');
+    if (params.has('day')) {
+      const d = params.get('day');
+      if (d === 'all' || DAYS.some(x => x.key === d)) dayFilter = d;
+    }
+    if (params.has('type')) {
+      const t = params.get('type');
+      if (t === 'all' || PRESENT_TYPES.includes(t)) typeFilter = t;
+    }
+    if (params.has('cat') && VALID_CATS.has(params.get('cat'))) catFilter = params.get('cat');
+    if (params.has('q')) {
+      searchTerm = params.get('q').trim();
+      const inp = document.getElementById('search');
+      if (inp) { inp.value = searchTerm; document.getElementById('clear').classList.toggle('visible', !!searchTerm); }
+    }
+  }
+
+  function writeUrlState() {
+    const url = new URL(location.href);
+    const set = (k, v, def) => { if (v && v !== def) url.searchParams.set(k, v); else url.searchParams.delete(k); };
+    set('view', view, 'speakers');
+    set('day', dayFilter, 'all');
+    set('type', typeFilter, 'all');
+    set('cat', catFilter, 'all');
+    set('q', searchTerm, '');
+    history.replaceState(null, '', url.toString());
+  }
 
   // ===========================================================
   // HELPERS
@@ -935,7 +1092,6 @@
 
   function matchesCat(s) {
     if (catFilter === 'all') return true;
-    if (catFilter === 'starred') return favs.has(s.name);
     return s.cat === catFilter;
   }
 
@@ -965,6 +1121,7 @@
       const count = c.id === 'all' ? SPEAKERS.length : SPEAKERS.filter(s => s.cat === c.id).length;
       const btn = document.createElement('button');
       btn.className = 'chip' + (catFilter === c.id ? ' active' : '');
+      btn.setAttribute('aria-pressed', catFilter === c.id ? 'true' : 'false');
       btn.innerHTML = `${c.label} <span class="count">${count}</span>`;
       btn.addEventListener('click', () => { catFilter = c.id; renderCatFilters(); render(); });
       wrap.appendChild(btn);
@@ -976,12 +1133,14 @@
     wrap.innerHTML = '';
     const allBtn = document.createElement('button');
     allBtn.className = 'chip day' + (dayFilter === 'all' ? ' active' : '');
+    allBtn.setAttribute('aria-pressed', dayFilter === 'all' ? 'true' : 'false');
     allBtn.innerHTML = `All days <span class="count">${UNIQUE_SESSIONS.length}</span>`;
     allBtn.addEventListener('click', () => { dayFilter = 'all'; renderDayFilters(); render(); });
     wrap.appendChild(allBtn);
     DAYS.forEach(d => {
       const btn = document.createElement('button');
       btn.className = 'chip day' + (dayFilter === d.key ? ' active' : '');
+      btn.setAttribute('aria-pressed', dayFilter === d.key ? 'true' : 'false');
       btn.innerHTML = `${d.label} <span class="count">${d.sessions.length}</span>`;
       btn.addEventListener('click', () => { dayFilter = d.key; renderDayFilters(); render(); });
       wrap.appendChild(btn);
@@ -999,12 +1158,14 @@
     wrap.innerHTML = '';
     const allBtn = document.createElement('button');
     allBtn.className = 'chip type' + (typeFilter === 'all' ? ' active' : '');
+    allBtn.setAttribute('aria-pressed', typeFilter === 'all' ? 'true' : 'false');
     allBtn.innerHTML = `Type: All <span class="count">${UNIQUE_SESSIONS.length}</span>`;
     allBtn.addEventListener('click', () => { typeFilter = 'all'; renderTypeFilters(); render(); });
     wrap.appendChild(allBtn);
     PRESENT_TYPES.forEach(t => {
       const btn = document.createElement('button');
       btn.className = 'chip type' + (typeFilter === t ? ' active' : '');
+      btn.setAttribute('aria-pressed', typeFilter === t ? 'true' : 'false');
       btn.innerHTML = `${t} <span class="count">${TYPE_COUNTS[t]}</span>`;
       btn.addEventListener('click', () => { typeFilter = t; renderTypeFilters(); render(); });
       wrap.appendChild(btn);
@@ -1015,13 +1176,22 @@
   // RENDER: VIEWS
   // ===========================================================
   function renderSpeakerCard(s) {
-    const filteredSessions = s.sessions.filter(sn => matchesDay(sn) && matchesType(sn) && matchesSearch(s, sn));
-    if (catFilter !== 'all' && !matchesCat(s)) return null;
+    // Speaker-level filter (Faculty / Fellow / Resident / etc.)
+    if (!matchesCat(s)) return null;
+
+    // Session-level filters (day, type, search)
     const anyFilter = !!searchTerm || dayFilter !== 'all' || typeFilter !== 'all';
-    if (!anyFilter && filteredSessions.length === 0 && s.sessions.length === 0) return null;
-    if (anyFilter && filteredSessions.length === 0 && !matchesSearch(s, null)) return null;
+    const filteredSessions = s.sessions.filter(sn => matchesDay(sn) && matchesType(sn) && matchesSearch(s, sn));
+
+    // If any session-level filter is active and no sessions match, hide the speaker.
+    if (anyFilter && filteredSessions.length === 0) return null;
+    // If no filters at all and the speaker somehow has zero sessions, hide.
+    if (!anyFilter && s.sessions.length === 0) return null;
+
     const sessionsToShow = anyFilter ? filteredSessions : s.sessions;
-    if (sessionsToShow.length === 0 && anyFilter && !matchesSearch(s, null)) return null;
+    // Auto-expand when filtering (user is honing in on specific sessions),
+    // collapsed by default otherwise (less scrolling, easier scanning of 45 people).
+    const isExpanded = anyFilter || expandedCards.has(s.name);
 
     const card = document.createElement('article');
     card.className = 'card' + (s.flag ? ' flagged' : '');
@@ -1033,6 +1203,8 @@
     nb.innerHTML = `<div class="name">${s.name}</div><div class="title">${s.title}</div>`;
     const fav = document.createElement('button');
     fav.className = 'fav' + (favs.has(s.name) ? ' on' : '');
+    fav.setAttribute('aria-label', favs.has(s.name) ? 'Remove ' + s.name + ' from favorites' : 'Save ' + s.name + ' to favorites');
+    fav.setAttribute('title', favs.has(s.name) ? 'Remove from favorites' : 'Save to favorites');
     fav.addEventListener('click', e => {
       e.stopPropagation();
       if (favs.has(s.name)) { favs.delete(s.name); toast('Removed'); }
@@ -1048,35 +1220,71 @@
       (s.flag ? `<span class="badge flag">Verify ID</span>` : '');
     card.appendChild(meta);
 
-    if (sessionsToShow.length > 0) {
+    if (sessionsToShow.length > 0 && !isExpanded) {
+      // ----- COLLAPSED VIEW -----
+      // Show a compact summary: session count + next session preview.
+      // Tapping the card toggles expansion.
+      const now = new Date();
+      const nextSession = sessionsToShow.find(sn => sn.start && sn.start >= now) || sessionsToShow[0];
+      const status = nextSession ? sessionStatus(nextSession) : null;
+      const liveBadge = status === 'live' ? '<span class="next-badge live">LIVE NOW</span>' : status === 'upcoming' ? '<span class="next-badge upcoming">SOON</span>' : '';
+      const preview = document.createElement('div'); preview.className = 'card-preview';
+      preview.innerHTML = `<div class="preview-meta"><span class="preview-count">${sessionsToShow.length} ${sessionsToShow.length === 1 ? 'session' : 'sessions'}</span>${liveBadge}<span class="preview-chev">▼ tap to expand</span></div>` +
+        (nextSession ? `<div class="preview-next"><span class="preview-next-time">${nextSession.dayLabel}, ${nextSession.startStr}</span><span class="preview-next-room">${nextSession.r}</span></div>` : '');
+      preview.style.cursor = 'pointer';
+      preview.addEventListener('click', () => {
+        expandedCards.add(s.name);
+        const scrollY = window.scrollY;
+        render();
+        window.scrollTo(0, scrollY);
+      });
+      card.appendChild(preview);
+    } else if (sessionsToShow.length > 0) {
+      // ----- EXPANDED VIEW -----
       const sw = document.createElement('div'); sw.className = 'sessions';
-      sw.innerHTML = `<div class="sessions-header"><span>${sessionsToShow.length} ${sessionsToShow.length === 1 ? 'session' : 'sessions'}</span><span>${s.aff}</span></div>`;
+      // Header shows session count + a "Collapse" affordance (unless filters are forcing expansion)
+      const collapseControl = !anyFilter
+        ? `<button class="sessions-collapse" type="button" aria-label="Collapse ${s.name}'s sessions">▲ Collapse</button>`
+        : `<span>${s.aff}</span>`;
+      sw.innerHTML = `<div class="sessions-header"><span>${sessionsToShow.length} ${sessionsToShow.length === 1 ? 'session' : 'sessions'}</span>${collapseControl}</div>`;
+      const collapseBtn = sw.querySelector('.sessions-collapse');
+      if (collapseBtn) collapseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        expandedCards.delete(s.name);
+        const scrollY = window.scrollY;
+        render();
+        window.scrollTo(0, scrollY);
+      });
       sessionsToShow.forEach(sn => {
         const status = sessionStatus(sn);
-        const sessBtn = document.createElement('a');
-        sessBtn.className = 'session' + (status === 'live' ? ' live now-tag' : status === 'upcoming' ? ' upcoming' : '');
-        sessBtn.href = swapcardPerson(s.id);
-        sessBtn.target = '_blank'; sessBtn.rel = 'noopener';
+        const sessBox = document.createElement('div');
+        sessBox.className = 'session' + (status === 'live' ? ' live now-tag' : status === 'upcoming' ? ' upcoming' : '');
         const dayPart = sn.dayLabel || '';
         const timePart = sn.startStr && sn.endStr ? `${sn.startStr} – ${sn.endStr}` : sn.d;
         const typePill = sn.type ? `<span class="type-pill type-${sn.type.replace(/\s/g, '-')}">${sn.type}</span>` : '';
-        sessBtn.innerHTML = `<span class="session-day">${dayPart}</span><span class="session-time">${timePart}</span>` +
+        sessBox.innerHTML = `<a class="session-link" href="${swapcardPerson(s.id)}" target="_blank" rel="noopener">` +
+          `<span class="session-day">${dayPart}</span><span class="session-time">${timePart}</span>` +
           `<div class="session-title">${typePill}${sn.t}</div>` +
           `<div class="session-room">${sn.r}</div>` +
-          `<div class="session-actions"><button class="session-btn" data-act="ical">📅 Add to calendar</button><button class="session-btn" data-act="share">↗ Share</button></div>`;
-        sessBtn.querySelectorAll('.session-btn').forEach(b => {
+          `</a>` +
+          `<div class="session-actions">` +
+            `<button class="session-btn" data-act="gcal" aria-label="Add ${sn.t} to Google Calendar">📅 Google Calendar</button>` +
+            `<button class="session-btn" data-act="ics" aria-label="Download ${sn.t} as iCalendar file">⬇️ .ics</button>` +
+            `<button class="session-btn" data-act="share" aria-label="Share ${sn.t}">↗ Share</button>` +
+          `</div>`;
+        sessBox.querySelectorAll('.session-btn').forEach(b => {
           b.addEventListener('click', (e) => {
-            e.preventDefault(); e.stopPropagation();
-            if (b.dataset.act === 'ical') {
-              // Use Google Calendar deep link — works one-tap on iPhone/Android
-              const url = googleCalendarUrl(sn, s.name);
-              window.open(url, '_blank', 'noopener');
+            e.stopPropagation();
+            if (b.dataset.act === 'gcal') {
+              window.open(googleCalendarUrl(sn, s.name), '_blank', 'noopener');
+            } else if (b.dataset.act === 'ics') {
+              downloadIcal([{ ...sn, speakers: [s] }], 'UM_AUA2026_' + s.name.replace(/[^A-Za-z0-9]+/g,'_'));
             } else {
               shareSession(sn, s);
             }
           });
         });
-        sw.appendChild(sessBtn);
+        sw.appendChild(sessBox);
       });
       card.appendChild(sw);
     }
@@ -1091,7 +1299,26 @@
   function renderSpeakers(speakerList) {
     const grid = document.createElement('div'); grid.className = 'grid';
     let count = 0;
-    speakerList.forEach(s => {
+    // Smart sort: during the conference, sort by each speaker's next-upcoming session
+    // so attendees see who's speaking SOON at the top. Before/after the conference, alphabetical.
+    const now = new Date();
+    const firstStart = UNIQUE_SESSIONS.find(s => s.start)?.start;
+    const lastEnd = UNIQUE_SESSIONS.reduce((a, s) => (s.end && s.end > a) ? s.end : a, new Date(0));
+    const conferenceLive = firstStart && now >= firstStart && now <= lastEnd;
+    const sorted = speakerList.slice();
+    if (conferenceLive) {
+      sorted.sort((a, b) => {
+        const nextA = a.sessions.filter(sn => sn.start && sn.start >= now).sort((x, y) => x.start - y.start)[0];
+        const nextB = b.sessions.filter(sn => sn.start && sn.start >= now).sort((x, y) => x.start - y.start)[0];
+        if (nextA && nextB) return nextA.start - nextB.start;
+        if (nextA) return -1;
+        if (nextB) return 1;
+        return a.name.localeCompare(b.name);
+      });
+    } else {
+      sorted.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    sorted.forEach(s => {
       const card = renderSpeakerCard(s);
       if (card) { grid.appendChild(card); count++; }
     });
@@ -1105,8 +1332,7 @@
     filteredDays.forEach(d => {
       const daySessions = d.sessions.filter(sn => {
         if (typeFilter !== 'all' && sn.type !== typeFilter) return false;
-        if (catFilter !== 'all' && catFilter !== 'starred' && !sn.speakers.some(s => s.cat === catFilter)) return false;
-        if (catFilter === 'starred' && !sn.speakers.some(s => favs.has(s.name))) return false;
+        if (catFilter !== 'all' && !sn.speakers.some(s => s.cat === catFilter)) return false;
         if (searchTerm) {
           const t = searchTerm.toLowerCase();
           if (!sn.t.toLowerCase().includes(t) && !sn.r.toLowerCase().includes(t) &&
@@ -1151,10 +1377,7 @@
         if (!sn.t.toLowerCase().includes(t) && !sn.r.toLowerCase().includes(t) &&
             !sn.speakers.some(s => s.name.toLowerCase().includes(t))) return;
       }
-      if (catFilter !== 'all' && catFilter !== 'starred') {
-        if (!sn.speakers.some(s => s.cat === catFilter)) return;
-      }
-      if (catFilter === 'starred' && !sn.speakers.some(s => favs.has(s.name))) return;
+      if (catFilter !== 'all' && !sn.speakers.some(s => s.cat === catFilter)) return;
       if (now >= sn.start && now <= sn.end) live.push(sn);
       else if (sn.start > now && sn.start - now < 2 * 60 * 60 * 1000) upcoming.push(sn);
       else if (sn.start > now) later.push(sn);
@@ -1164,20 +1387,24 @@
 
     const today = new Date();
     const headerText = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-    wrap.innerHTML = `<div class="now-hero"><h2>${headerText}</h2><p>${live.length} live · ${upcoming.length} starting soon · ${later.length} later today/this week</p></div>`;
+    // Pick the right tense based on whether we're during or before the meeting
+    const firstStart = UNIQUE_SESSIONS.find(s => s.start)?.start;
+    const conferenceStarted = firstStart && now >= firstStart;
+    const laterLabel = conferenceStarted ? 'still to come' : 'scheduled this week';
+    wrap.innerHTML = `<div class="now-hero"><h2>${headerText}</h2><p>${live.length} live · ${upcoming.length} starting soon · ${later.length} ${laterLabel}</p></div>`;
 
     if (live.length === 0 && upcoming.length === 0 && later.length === 0) {
       wrap.innerHTML += '<div class="empty"><div class="empty-icon">⏰</div><h3>Nothing UM-related is scheduled right now</h3><p>Check back during conference days (May 14–18, 2026).</p></div>';
       return { node: wrap, count: 0 };
     }
 
-    function makeSec(title, list, cls) {
+    function makeSec(title, list, cls, customCount) {
       if (list.length === 0) return '';
       const sec = document.createElement('div'); sec.className = 'now-section ' + cls;
-      sec.innerHTML = `<h3>${title} (${list.length})</h3>`;
+      const countText = customCount != null ? customCount : list.length;
+      sec.innerHTML = `<h3>${title} <span style="color: var(--ink-3); font-weight: 400; margin-left: 6px;">${countText}</span></h3>`;
       const tl = document.createElement('div'); tl.className = 'timeline';
       list.forEach(sn => {
-        const status = sn === list[0] && cls === 'live' ? 'live' : cls === 'upcoming' ? 'upcoming' : 'normal';
         const card = document.createElement('a');
         card.className = 'timeline-session' + (cls === 'live' ? ' live' : cls === 'upcoming' ? ' upcoming' : '');
         card.href = sn.speakers.length === 1 ? swapcardPerson(sn.speakers[0].id) : swapcardSearch(sn.speakers[0].name);
@@ -1194,8 +1421,11 @@
       return sec;
     }
     const liveSec = makeSec('Live Now', live, 'live');
-    const upSec = makeSec('Starting Soon (next 2 hours)', upcoming, 'upcoming');
-    const laterSec = makeSec('Later', later.slice(0, 10), 'later');
+    const upSec = makeSec('Starting Soon', upcoming, 'upcoming');
+    const laterShown = later.slice(0, 10);
+    const laterLabelText = conferenceStarted ? 'Coming Up' : 'Upcoming this Conference';
+    const laterCount = later.length > 10 ? `showing 10 of ${later.length}` : later.length;
+    const laterSec = makeSec(laterLabelText, laterShown, 'later', laterCount);
     if (liveSec) wrap.appendChild(liveSec);
     if (upSec) wrap.appendChild(upSec);
     if (laterSec) wrap.appendChild(laterSec);
@@ -1206,10 +1436,74 @@
     const favSpeakers = SPEAKERS.filter(s => favs.has(s.name));
     if (favSpeakers.length === 0) {
       const wrap = document.createElement('div');
-      wrap.innerHTML = '<div class="empty"><div class="empty-icon">⭐</div><h3>No saved speakers yet</h3><p>Tap the ★ on any speaker card to save them. They\'ll show up here for quick access at the conference.</p></div>';
+      wrap.innerHTML = '<div class="empty"><div class="empty-icon">📌</div><h3>Your plan is empty</h3><p>Tap the ★ on any speaker card to add them to your plan. Their sessions will show here as a chronological agenda — with overlap warnings if two starred speakers clash.</p></div>';
       return { node: wrap, count: 0 };
     }
-    return renderSpeakers(favSpeakers);
+
+    // Build chronological agenda from all sessions of starred speakers
+    const planSessions = UNIQUE_SESSIONS
+      .filter(sn => sn.speakers.some(s => favs.has(s.name)))
+      .filter(sn => sn.start) // keep only sessions with parsed times
+      .sort((a, b) => a.start - b.start);
+
+    // Group by day, detect time conflicts within each day
+    const byDay = new Map();
+    planSessions.forEach(sn => {
+      if (!byDay.has(sn.dateKey)) byDay.set(sn.dateKey, []);
+      byDay.get(sn.dateKey).push(sn);
+    });
+    // Conflict detection within each day
+    byDay.forEach(daySessions => {
+      daySessions.forEach((sn) => {
+        sn._conflicts = daySessions.filter(other =>
+          other !== sn && other.start < sn.end && other.end > sn.start
+        );
+      });
+    });
+
+    const wrap = document.createElement('div');
+
+    // Plan summary header
+    const totalConflicts = planSessions.filter(s => s._conflicts && s._conflicts.length).length;
+    const sumHtml = `<div class="plan-summary"><div class="plan-summary-stat"><span class="plan-n">${favs.size}</span><span class="plan-l">${favs.size === 1 ? 'speaker' : 'speakers'} starred</span></div>` +
+      `<div class="plan-summary-stat"><span class="plan-n">${planSessions.length}</span><span class="plan-l">${planSessions.length === 1 ? 'session' : 'sessions'} on your plan</span></div>` +
+      (totalConflicts > 0 ? `<div class="plan-summary-stat plan-summary-warn"><span class="plan-n">${totalConflicts}</span><span class="plan-l">time conflict${totalConflicts === 1 ? '' : 's'}</span></div>` : '') +
+      `</div>`;
+    wrap.innerHTML = sumHtml;
+
+    // Day sections
+    [...byDay.entries()].sort((a, b) => a[0].localeCompare(b[0])).forEach(([dateKey, daySessions]) => {
+      const dayMeta = DAYS.find(d => d.key === dateKey);
+      const section = document.createElement('div'); section.className = 'day-section';
+      section.innerHTML = `<div class="day-header"><span class="day-header-text">${dayMeta ? dayMeta.label : dateKey}</span><span class="day-header-count">${daySessions.length} ${daySessions.length === 1 ? 'session' : 'sessions'}</span></div>`;
+      const tl = document.createElement('div'); tl.className = 'timeline';
+      daySessions.forEach(sn => {
+        const status = sessionStatus(sn);
+        const card = document.createElement('a');
+        const conflicted = sn._conflicts && sn._conflicts.length > 0;
+        card.className = 'timeline-session' + (status === 'live' ? ' live' : status === 'upcoming' ? ' upcoming' : '') + (conflicted ? ' conflicted' : '');
+        card.href = sn.speakers.length === 1 ? swapcardPerson(sn.speakers[0].id) : swapcardSearch(sn.speakers[0].name);
+        card.target = '_blank'; card.rel = 'noopener';
+        const tag = status === 'live' ? '<span class="ts-tag live">LIVE</span>' : status === 'upcoming' ? '<span class="ts-tag upcoming">SOON</span>' : '';
+        const typePill = sn.type ? `<span class="type-pill type-${sn.type.replace(/\s/g, '-')}">${sn.type}</span>` : '';
+        const speakerHtml = sn.speakers.map(sp =>
+          favs.has(sp.name) ? `<strong>★ ${sp.name}</strong>` : sp.name
+        ).join(' · ');
+        const conflictBanner = conflicted
+          ? `<div class="conflict-banner">⚠️ Overlaps with ${sn._conflicts.map(c => '"' + c.t.substring(0, 40) + (c.t.length > 40 ? '…' : '') + '"').join(' & ')}</div>`
+          : '';
+        card.innerHTML = `<div class="ts-top"><span class="ts-time">${sn.startStr} – ${sn.endStr}</span>${tag}</div>` +
+          `<div class="ts-title">${typePill}${sn.t}</div>` +
+          `<div class="ts-speakers">${speakerHtml}</div>` +
+          `<div class="ts-room">${sn.r}</div>` +
+          conflictBanner;
+        tl.appendChild(card);
+      });
+      section.appendChild(tl);
+      wrap.appendChild(section);
+    });
+
+    return { node: wrap, count: planSessions.length };
   }
 
   // ===========================================================
@@ -1232,13 +1526,41 @@
       empty.style.display = 'none';
       container.appendChild(result.node);
       const label = view === 'speakers' ? `${result.count} ${result.count === 1 ? 'speaker' : 'speakers'}` :
-                    view === 'timeline' ? `${result.count} sessions` :
+                    view === 'timeline' ? `${result.count} ${result.count === 1 ? 'session' : 'sessions'}` :
                     view === 'now' ? `Live right now` :
-                    `${result.count} saved`;
+                    view === 'favorites' ? `${result.count} ${result.count === 1 ? 'session on your plan' : 'sessions on your plan'}` :
+                    `${result.count}`;
       document.getElementById('resultCount').textContent = label;
     }
     refreshIcalLabel();
+    refreshExpandAllBtn();
+    writeUrlState();
   }
+
+  function refreshExpandAllBtn() {
+    const btn = document.getElementById('expandAllBtn');
+    const lbl = document.getElementById('expandAllLabel');
+    if (!btn || !lbl) return;
+    // Only show on Speakers view when no other filters are pulling cards open automatically
+    const anyFilter = !!searchTerm || dayFilter !== 'all' || typeFilter !== 'all';
+    if (view !== 'speakers' || anyFilter) { btn.style.display = 'none'; return; }
+    btn.style.display = 'inline-flex';
+    // If most cards are expanded, the button collapses; otherwise it expands.
+    const visibleSpeakers = SPEAKERS.filter(matchesCat);
+    const allExpanded = visibleSpeakers.length > 0 && visibleSpeakers.every(s => expandedCards.has(s.name));
+    lbl.textContent = allExpanded ? 'Collapse all' : 'Expand all';
+    btn.dataset.action = allExpanded ? 'collapse' : 'expand';
+  }
+
+  document.getElementById('expandAllBtn').addEventListener('click', () => {
+    const action = document.getElementById('expandAllBtn').dataset.action;
+    if (action === 'expand') {
+      SPEAKERS.filter(matchesCat).forEach(s => expandedCards.add(s.name));
+    } else {
+      expandedCards.clear();
+    }
+    render();
+  });
 
   // ===========================================================
   // ICAL EXPORT
@@ -1255,14 +1577,15 @@
     sessions.forEach((sn, i) => {
       if (!sn.start || !sn.end) return;
       const speakers = sn.speakers ? sn.speakers.map(s => s.name).join(', ') : '';
+      const uidBase = sn.speakers?.[0]?.id || sn.speaker?.id || 'um';
       lines.push('BEGIN:VEVENT');
-      lines.push('UID:aua2026-' + (sn.speaker?.id || sn.speakers?.[0]?.id || 'um') + '-' + i + '@um-urology');
+      lines.push('UID:aua2026-' + uidBase + '-' + i + '@um-urology');
       lines.push('DTSTAMP:' + icalDate(new Date()));
       lines.push('DTSTART:' + icalDate(sn.start));
       lines.push('DTEND:' + icalDate(sn.end));
       lines.push('SUMMARY:' + icalEscape('[UM] ' + sn.t));
       lines.push('LOCATION:' + icalEscape(sn.r + ' · Walter E. Washington Convention Center'));
-      const desc = (speakers ? 'UM Speaker(s): ' + speakers + '\\n\\n' : '') + 'AUA 2026 — University of Michigan Department of Urology';
+      const desc = (speakers ? 'UM Speaker(s): ' + speakers + '\n\n' : '') + 'AUA 2026 — University of Michigan Department of Urology';
       lines.push('DESCRIPTION:' + icalEscape(desc));
       lines.push('END:VEVENT');
     });
@@ -1280,7 +1603,7 @@
   }
   // Compute what would be exported right now based on view + filters
   function currentExportSet() {
-    if (view === 'favorites' || catFilter === 'starred') {
+    if (view === 'favorites') {
       const favSet = UNIQUE_SESSIONS.filter(sn => sn.speakers.some(s => favs.has(s.name)));
       return { sessions: favSet, source: 'favorites' };
     }
@@ -1304,32 +1627,33 @@
     const labelEl = document.getElementById('icalLabel');
     const btn = document.getElementById('icalBtn');
     if (source === 'favorites') {
-      labelEl.textContent = sessions.length ? `Download ★ ${sessions.length}` : 'Star some first';
+      labelEl.textContent = sessions.length ? `Download ${sessions.length} ★ .ics` : 'Save ★ to export';
       btn.style.opacity = sessions.length ? '1' : '0.55';
     } else if (source === 'filtered') {
       labelEl.textContent = `Download ${sessions.length} .ics`;
       btn.style.opacity = sessions.length ? '1' : '0.55';
     } else {
-      labelEl.textContent = 'Filter or ★ first';
-      btn.style.opacity = '0.6';
+      // No filter, no favorites — show "Download all N .ics"
+      labelEl.textContent = `Download all ${sessions.length} .ics`;
+      btn.style.opacity = '1';
     }
   }
 
   document.getElementById('icalBtn').addEventListener('click', () => {
     const { sessions, source } = currentExportSet();
-    if (source === 'all') {
-      toast('Filter by day/type/★ first, then download');
+    if (sessions.length === 0) {
+      toast(source === 'favorites' ? 'Tap the ★ on a speaker first' : 'Nothing matches your filter');
       return;
     }
-    if (sessions.length === 0) {
-      toast(source === 'favorites' ? 'No favorites yet — tap ★ on a speaker' : 'Nothing matches your filter');
-      return;
+    // Warn before bulk-exporting the entire schedule
+    if (source === 'all' && sessions.length > 15) {
+      if (!confirm(`Add all ${sessions.length} UM sessions to your calendar? Use the day or type filters first if you only want a subset.`)) return;
     }
     const tagBits = [];
     if (dayFilter !== 'all') tagBits.push(dayFilter);
     if (typeFilter !== 'all') tagBits.push(typeFilter.replace(/\s/g,'_'));
     if (source === 'favorites') tagBits.push('favorites');
-    const fname = 'UM_AUA2026' + (tagBits.length ? '_' + tagBits.join('-') : '');
+    const fname = 'UM_AUA2026' + (tagBits.length ? '_' + tagBits.join('-') : '_all');
     downloadIcal(sessions, fname);
   });
 
@@ -1337,8 +1661,25 @@
     const text = `${s.name} — "${sn.t}"\n${sn.dayLabel}, ${sn.startStr} – ${sn.endStr}\n📍 ${sn.r}\nSwapcard: ${swapcardPerson(s.id)}`;
     if (navigator.share) {
       navigator.share({ title: s.name + ' @ AUA2026', text }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(text).then(() => toast('Copied'));
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => toast('Copied to clipboard')).catch(() => fallbackCopy(text));
+      return;
+    }
+    fallbackCopy(text);
+  }
+  function fallbackCopy(text) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      toast('Copied to clipboard');
+    } catch (e) {
+      toast("Couldn't copy — long-press to select");
     }
   }
 
@@ -1346,9 +1687,14 @@
   // EVENTS
   // ===========================================================
   document.querySelectorAll('.view-tab').forEach(tab => {
+    tab.setAttribute('aria-pressed', tab.classList.contains('active') ? 'true' : 'false');
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-pressed', 'false');
+      });
       tab.classList.add('active');
+      tab.setAttribute('aria-pressed', 'true');
       view = tab.dataset.view;
       render();
     });
@@ -1377,13 +1723,33 @@
   // ===========================================================
   // INIT
   // ===========================================================
+  // Read URL state first so chips render in the correct active state
+  readUrlState();
+  // Make sure the active view-tab matches the URL-driven view
+  document.querySelectorAll('.view-tab').forEach(t => {
+    const isActive = t.dataset.view === view;
+    t.classList.toggle('active', isActive);
+    t.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  });
   renderCatFilters();
   renderDayFilters();
   renderTypeFilters();
   render();
 
-  // Auto-refresh now-view every 60s
-  setInterval(() => { if (view === 'now' || view === 'speakers' || view === 'timeline') render(); }, 60 * 1000);
+  // Auto-refresh the Now view every minute so the LIVE / SOON badges stay current.
+  // Only triggers when the user is on the Now tab AND the tab is visible — no scroll-jumps
+  // on People / Schedule / Saved, no CPU churn when backgrounded.
+  let liveTimer = null;
+  function startLiveTimer() {
+    stopLiveTimer();
+    liveTimer = setInterval(() => { if (view === 'now' && !document.hidden) render(); }, 60 * 1000);
+  }
+  function stopLiveTimer() { if (liveTimer) { clearInterval(liveTimer); liveTimer = null; } }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopLiveTimer();
+    else { startLiveTimer(); if (view === 'now') render(); }
+  });
+  startLiveTimer();
 </script>
 </body>
 </html>
